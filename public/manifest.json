@@ -1,0 +1,15 @@
+{
+  "manifest_version": 3,
+  "version": "1.0.1",
+  "name": "My first Vite Extension",
+  "action": {
+    "default_popup": "index.html"
+  },
+  "permissions": [
+    "scripting"
+  ],
+  "host_permissions": [
+    "http://*/*",
+    "https://*/*"
+  ]
+}
