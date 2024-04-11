@@ -1,10 +1,27 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from "react"
+import "./App.css"
+import reactLogo from "./assets/react.svg"
+import viteLogo from "/vite.svg"
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [colour, setColour] = useState("#000000")
+
+  const onClick = async () => {
+    // Set random colour
+    setColour(
+      "#" + ((Math.random() * 0xffffff) << 0).toString(16).padStart(6, "0")
+    )
+
+    // Update page background with the color
+    let [tab] = await chrome.tabs.query({ active: true })
+    chrome.scripting.executeScript({
+      target: { tabId: tab.id! },
+      args: [colour],
+      func: (colour) => {
+        document.body.style.backgroundColor = colour
+      },
+    })
+  }
 
   return (
     <>
@@ -18,15 +35,10 @@ function App() {
       </div>
       <h1>Vite + React</h1>
       <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
+        <button onClick={onClick}>Color is {colour}</button>
       </div>
       <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
+        Click on the button to change the background color
       </p>
     </>
   )
