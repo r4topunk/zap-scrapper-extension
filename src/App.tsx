@@ -14,7 +14,6 @@ function App() {
       {
         target: { tabId: tab.id! },
         func: () => {
-          // Code inside this function is executed in the context of the webpage
           console.log("Injected script running")
           let main = document.getElementById("main")
           let header = main?.getElementsByTagName("header")[0]
@@ -44,13 +43,10 @@ function App() {
             }
           }
 
-          // Return the data that needs to be sent back to the extension
           return { name, photo, datedValues }
         },
       },
       (results) => {
-        // This function gets called once the script has executed
-        // `results[0].result` contains the returned value from the content script
         if (results && results.length > 0) {
           const data = results[0].result
           setData(data)
