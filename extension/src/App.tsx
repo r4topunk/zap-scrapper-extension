@@ -16,7 +16,7 @@ function App() {
     if (!data) return setMessage("No data found. Try again.")
 
     try {
-      await fetch(ENDPOINT_URL, {
+      const res = await fetch(ENDPOINT_URL, {
         method: "POST",
         headers: {
           'Content-Type': 'application/json'
@@ -27,7 +27,8 @@ function App() {
           messages: data?.messages
         })
       })
-      setMessage("User reported")
+      const json = await res.json()
+      setMessage(`User reported. Chance of fraud: ${json.note}`)
     } catch (err) {
       console.error(err)
       setMessage("Report error: " + err)

@@ -20,8 +20,11 @@ git clone https://github.com/r4topunk/zap-scrapper-extension.git
 cd zap-scrapper-extension
 ```
 
+### Extensão
+
 Instalar pacotes
 ```bash
+cd extension
 npm install
 ```
 
@@ -31,6 +34,19 @@ npm run build
 ```
 
 Com isso, será gerada a pasta `dist` contendo a extensão.
+
+### Servidor
+
+Instalar pacotes
+```bash
+cd server
+npm install
+```
+
+Rodar servidor
+```bash
+npm run start
+```
 
 ## Como instalar no browser?
 
@@ -55,3 +71,5 @@ interface Data {
   messages: string[][] // tupla com data e mensagem enviada
 }
 ```
+
+Afim de melhorar a prova de conceito, adicionei ao repositório um servidor que pede uma análise ao ChatGPT, para a classificação da conversa como golpe. Acredito que essa é uma integração legal que pode ser utilizada para realizar uma análise por LLM, antes de um técnico validar se a conversa realmenet se trata de um golpe.
