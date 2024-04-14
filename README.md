@@ -43,3 +43,15 @@ A partir disso, a extensão está instalada e pronta para uso.
 ## Como integrar?
 
 O código da extensão é uma prova de conceito, considerando que o código será utilizado em um ambiente coorporativo, é importante que o código seja clonado e sejam feitas as alterações necessárias para a integração com o endpoint do serviço de análise e resposta.
+
+Antes de realizar o build, crie um arquivo `.env` a partir do `.env.example`, passando qual a URL de endpoint que está esperando o envio dos dados.
+
+O formato dos dados enviados será:
+
+```typescript
+interface Data {
+  photo: string, // url da imagem de perfil
+  name: string, // número do contato
+  messages: string[][] // tupla com data e mensagem enviada
+}
+```

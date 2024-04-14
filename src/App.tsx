@@ -1,12 +1,39 @@
 import { useState } from "react"
 import "./App.css"
 
+const ENDPOINT_URL = import.meta.env.VITE_ENDPOINT_URL || ""
+
 function App() {
   const [data, setData] = useState<{
     photo?: string
     name?: string
-    datedValues?: string[][]
+    messages?: string[][]
   }>()
+  const [message, setMessage] = useState("")
+
+  const reportUser = async () => {
+    setMessage("Reporting user")
+    if (!data) return setMessage("No data found. Try again.")
+
+    try {
+      await fetch(ENDPOINT_URL, {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          photo: data?.photo,
+          name: data?.name,
+          messages: data?.messages
+        })
+      })
+      setMessage("User reported")
+    } catch (err) {
+      console.error(err)
+      setMessage("Report error: " + err)
+    }
+  }
+
   const onClick = async () => {
     let [tab] = await chrome.tabs.query({ active: true, currentWindow: true })
 
@@ -24,7 +51,7 @@ function App() {
             header?.getElementsByTagName("span")[nameIndex]?.textContent || ""
           let texts = main?.querySelectorAll("[data-pre-plain-text]")
 
-          let datedValues = []
+          let messages = []
           if (texts) {
             for (let i = 0; i < texts.length; i++) {
               let el = texts[i]
@@ -39,11 +66,11 @@ function App() {
                     : 0
 
               let msg = spans[textIndex]?.textContent || ""
-              datedValues.push([date, msg])
+              messages.push([date, msg])
             }
           }
 
-          return { name, photo, datedValues }
+          return { name, photo, messages }
         },
       },
       (results) => {
@@ -59,7 +86,7 @@ function App() {
   return (
     <div style={{ display: "flex", flexDirection: "column" }}>
       <h1>Zap Scrapper</h1>
-      {!data?.datedValues ? (
+      {!data?.messages ? (
         <>
           <p>Click on the button to get the chat data</p>
           <button onClick={onClick}>Get chat</button>
@@ -71,18 +98,19 @@ function App() {
       {data?.photo ? (
         <input type="text" disabled defaultValue={data.photo} />
       ) : null}
-      {data?.datedValues ? (
+      {data?.messages ? (
         <>
           <textarea
             disabled
-            defaultValue={data.datedValues
+            defaultValue={data.messages
               .map((value) => `${value[0]}${value[1]}`)
               .join("\n")}
             style={{ height: "200px" }}
           />
-          <button>Report user</button>
+          <button onClick={reportUser}>Report user</button>
         </>
       ) : null}
+      {message ? <p>{message}</p> : null}
     </div>
   )
 }
