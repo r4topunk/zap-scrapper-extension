@@ -1,4 +1,4 @@
-# Zap Scrapper Extension
+# Zap Scrapper Extension + GPT Analysis
 
 Uma extensão para navegador capaz de raspar uma conversa aberta no WhatsApp. A extensão extrai o nome, a foto de perfil e o histório de mensagens do chat.
 
