@@ -85,7 +85,7 @@
         }),
       });
       const json = await res.json();
-      alert(`User reported. Chance of fraud: ${json.note}`);
+      alert(`User ${data?.name} reported. Chance of fraud: ${json.note}`);
     } catch (err) {
       console.error("Error fetching data:", err);
     }
