@@ -2,16 +2,16 @@ import { useEffect, useState } from "react";
 import "./App.css";
 
 function App() {
-  const [autoDetect, setAutoDetect] = useState(
+  const [isDetectOn, setIsDetectOn] = useState(
     localStorage.getItem("autoDetectEnabled") === "true",
   );
 
   useEffect(() => {
-    localStorage.setItem("autoDetectEnabled", autoDetect.toString());
-  }, [autoDetect]);
+    localStorage.setItem("autoDetectEnabled", isDetectOn.toString());
+  }, [isDetectOn]);
 
   const toggleAutoDetect = async () => {
-    setAutoDetect(!autoDetect);
+    setIsDetectOn(!isDetectOn);
     let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
 
     chrome.scripting.executeScript({
@@ -21,7 +21,7 @@ function App() {
         window.autoDetectEnabled = autoDetect;
         localStorage.setItem("autoDetectEnabled", autoDetect.toString());
       },
-      args: [!autoDetect],
+      args: [!isDetectOn],
     });
   };
 
@@ -30,19 +30,83 @@ function App() {
       style={{
         display: "flex",
         flexDirection: "column",
-        padding: "24px",
-        borderRadius: "16px"
+        backgroundColor: "#171717",
+        minWidth: "300px",
       }}
     >
-      <h1>Zap Defender</h1>
-      <button
+      <div
         style={{
-          backgroundColor: autoDetect ? "#FAECEC" : "#ECF6EC",
+          display: "flex",
+          padding: "12px",
+          borderBottom: "4px #16FF9D solid",
         }}
-        onClick={toggleAutoDetect}
       >
-        {autoDetect ? "Desligar" : "Ligar"}
-      </button>
+        <img src="/logo.svg" style={{ height: "24px", marginRight: "auto" }} />
+        <img
+          src="/language.svg"
+          style={{ width: "24px", marginRight: "4px" }}
+        />
+        <img src="/help.svg" style={{ width: "24px" }} />
+      </div>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          padding: "8px",
+          gap: "32px",
+        }}
+      >
+        <h2
+          style={{
+            background: "linear-gradient(90deg, #3DF64F 0%, #16FF9D 100%)",
+            backgroundClip: "text",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+            margin: 0,
+            marginTop: "24px",
+            fontSize: "32px",
+          }}
+        >
+          Zap Defender
+        </h2>
+        <button
+          style={{
+            backgroundColor: "#171717",
+            color: isDetectOn ? "#FF4D4D" : "#16FF9D",
+            border: isDetectOn ? "1px solid #FF4D4D" : "1px solid #16FF9D",
+            width: "80%",
+            outline: "none",
+            borderRadius: "8px",
+            padding: "0.6em 1.2em",
+            fontSize: "1em",
+            fontWeight: 500,
+            fontFamily: "inherit",
+            cursor: "pointer",
+          }}
+          onClick={toggleAutoDetect}
+        >
+          {isDetectOn ? "Desligar" : "Ligar"}
+        </button>
+        <span
+          style={{
+            textTransform: "uppercase",
+            color: "#727272",
+            fontSize: "12px",
+            margin: 0,
+          }}
+        >
+          Modo de detecção{" "}
+          <span
+            style={{
+              fontWeight: isDetectOn ? "700" : "400",
+              color: isDetectOn ? "#16FF9D" : "#FF4D4D",
+            }}
+          >
+            {isDetectOn ? "ativado" : "desativado"}
+          </span>
+        </span>
+      </div>
     </div>
   );
 }
