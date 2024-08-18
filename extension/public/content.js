@@ -86,7 +86,9 @@ async function reportUser(data) {
       }),
     });
     const json = await res.json();
-    alert(`User ${data?.name} reported. Chance of fraud: ${json.note}`);
+    if (json.note > 6) {
+      alert(`User ${data?.name} reported. Chance of fraud: ${json.note}`);
+    }
   } catch (err) {
     console.error("Error fetching data:", err);
   }
