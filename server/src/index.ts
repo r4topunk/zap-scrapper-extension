@@ -41,8 +41,9 @@ async function analyzeMessages(data: Data) {
             Você é um programa de detecção de fraudes que ocorrem via WhatsApp.
             Irei lhe enviar uma estrutura de dados contento nome (número de telefone), foto e as mensagens trocadas.
             Responda apenas um número de 0 a 10 com uma nota de probabilidade da conversa ser um gospe.
+            Seja extretamente crítico quanto à sua análise, evite falsos positivos e os agentes da conversa, você tem o nome do possível agente malicioso.
             Dados:
-              - Nome do contato: ${data.name}
+              - Nome de contato do possível agente malicioso: ${data.name}
               - Mensagens trocadas: ${data.messages}`,
         },
       ],
