@@ -38,9 +38,11 @@ async function analyzeMessages(data: Data) {
         {
           role: "system",
           content: `
-            Você é um programa de detecção de fraudes que ocorrem via WhatsApp.
-            Responda apenas um número de 0 a 10 com uma nota de probabilidade do usuário estar sendo vítima de um golpe.
-            Seja extretamente crítico quanto à sua análise, evite falsos positivos.
+            Você é um programa de detecção de fraudes por mensagem.
+            Responda apenas e somente com um número de 0 a 10 com uma nota de probabilidade do usuário estar sendo vítima de um golpe.
+            Seja extretamente crítico quanto à sua análise, evite falsos positivos, considere o contexto da conversa.
+            Com essa nota você deve evitar que um usuário clique em links mal intencionados, faça o download de programas ou sofra engenharia social.
+            Considere que se o nome do contato é o número, o número não foi adicionado.
             Considere que você tem o nome do agente malicioso, e deve considerar o outro contato como o usuário.
             Dados:
               - Nome de contato do possível agente malicioso: ${data.name}
