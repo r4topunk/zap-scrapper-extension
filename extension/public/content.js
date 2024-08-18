@@ -13,7 +13,7 @@
   }, 3000);
 })();
 
-const reportedMessages = new Set();
+var reportedMessages = new Set();
 
 function scrapData() {
   console.log("scrapData called");
@@ -72,9 +72,9 @@ function generateHash(str) {
   return hash.toString();
 }
 
-const reportUser = async (data) => {
+async function reportUser(data) {
   try {
-    const res = await fetch("http://localhost:3000/api", {
+    const res = await fetch("https://ruxintel.r4topunk.xyz/api", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -90,4 +90,4 @@ const reportUser = async (data) => {
   } catch (err) {
     console.error("Error fetching data:", err);
   }
-};
+}
