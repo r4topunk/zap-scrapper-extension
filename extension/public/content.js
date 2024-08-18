@@ -10,7 +10,7 @@
     if (window.autoDetectEnabled) {
       scrapData();
     }
-  }, 3000);
+  }, 10000);
 })();
 
 var reportedMessages = new Set();
