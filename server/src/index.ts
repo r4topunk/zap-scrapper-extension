@@ -37,7 +37,13 @@ async function analyzeMessages(data: Data) {
       messages: [
         {
           role: "system",
-          content: `Você é um programa de detecção de fraudes via WhatsApp. Irei lhe enviar uma estrutura de dados contento nome (número de telefone), foto (se estiver vazio, significa que o usuário não tem foto adicionada) e as mensagens trocadas (veja o nome do usuário para saber quais são as mensagens do agente possivelmente malicioso). Responda apenas um número de 0 a 10 com uma nota de probabilidade de golpe. Dados: ${JSON.stringify(data)}`,
+          content: `
+            Você é um programa de detecção de fraudes que ocorrem via WhatsApp.
+            Irei lhe enviar uma estrutura de dados contento nome (número de telefone), foto e as mensagens trocadas.
+            Responda apenas um número de 0 a 10 com uma nota de probabilidade da conversa ser um gospe.
+            Dados:
+              - Nome do contato: ${data.name}
+              - Mensagens trocadas: ${data.messages}`,
         },
       ],
       model: "gpt-3.5-turbo",
