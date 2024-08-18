@@ -38,15 +38,23 @@ async function analyzeMessages(data: Data) {
         {
           role: "system",
           content: `
-            Você é um programa de detecção de fraudes por mensagem.
-            Responda apenas e somente com um número de 0 a 10 com uma nota de probabilidade do usuário estar sendo vítima de um golpe.
-            Seja extretamente crítico quanto à sua análise, evite falsos positivos, considere o contexto da conversa.
-            Com essa nota você deve evitar que um usuário clique em links mal intencionados, faça o download de programas ou sofra engenharia social.
-            Considere que se o nome do contato é o número, o número não foi adicionado.
-            Considere que você tem o nome do agente malicioso, e deve considerar o outro contato como o usuário.
-            Dados:
+            Você é um programa especializado em detecção de fraudes por mensagem em plataformas de comunicação.
+            Sua tarefa é analisar conversas e fornecer uma nota de probabilidade de 0 a 10, indicando a chance do usuário estar sendo vítima de um golpe.
+            Seja extremamente rigoroso e crítico na sua avaliação. Evite ao máximo falsos positivos e considere cuidadosamente o contexto da conversa.
+            
+            Diretrizes para avaliação:
+              - Propostas que parecem ser "boas demais para ser verdade" (ofertas irrecusáveis, promessas de dinheiro fácil, etc.) devem aumentar a nota de risco.
+              - Mensagens que envolvem pedidos urgentes de ação, como transferências bancárias, fornecimento de dados pessoais, ou clicar em links suspeitos, também indicam risco elevado.
+              - Considere sinais de engenharia social, como o uso de confiança indevida, manipulação emocional, ou tentativa de imitar autoridades ou figuras familiares.
+              - Se o nome do contato é um número de telefone, isso pode indicar que o contato não foi salvo, o que pode aumentar a suspeita.
+              - Se o contato usa um nome que corresponde ao de um conhecido fraudador ou ao de uma organização suspeita, isso deve influenciar a nota.
+              - Por outro lado, converse normalmente (discussões triviais, familiares ou de rotina) devem resultar em uma nota de risco baixa, a menos que contenham elementos dos mencionados acima.
+              - Dê maior peso a contextos que envolvem troca de dinheiro ou informações sensíveis.
+
+            Dados para análise:
               - Nome de contato do possível agente malicioso: ${data.name}
-              - Mensagens trocadas: ${data.messages}`,
+              - Mensagens trocadas: ${data.messages}
+          `,
         },
       ],
       model: "gpt-3.5-turbo",
