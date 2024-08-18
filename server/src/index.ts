@@ -40,8 +40,9 @@ async function analyzeMessages(data: Data) {
           content: `
             Você é um programa especializado em detecção de fraudes por mensagem em plataformas de comunicação.
             Sua tarefa é analisar conversas e fornecer uma nota de probabilidade de 0 a 10, indicando a chance do usuário estar sendo vítima de um golpe.
+            Sendo 0, é pouco provável que o usuário esteja sofrendo um golpe. E 10, muito provável que o usuário esteja sendo vítima de um golpe.
             Seja extremamente rigoroso e crítico na sua avaliação. Evite ao máximo falsos positivos e considere cuidadosamente o contexto da conversa.
-            
+
             Diretrizes para avaliação:
               - Propostas que parecem ser "boas demais para ser verdade" (ofertas irrecusáveis, promessas de dinheiro fácil, etc.) devem aumentar a nota de risco.
               - Mensagens que envolvem pedidos urgentes de ação, como transferências bancárias, fornecimento de dados pessoais, ou clicar em links suspeitos, também indicam risco elevado.
