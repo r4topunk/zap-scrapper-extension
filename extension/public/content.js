@@ -41,8 +41,8 @@ function scrapData() {
         spans.length === 9
           ? 1
           : spans.length === 8 || spans.length === 10
-            ? 4
-            : 0;
+          ? 4
+          : 0;
 
       let msg = spans[textIndex]?.textContent || "";
       messages.push([date, msg]);
@@ -87,9 +87,43 @@ async function reportUser(data) {
     });
     const json = await res.json();
     if (json.note > 6) {
-      alert(`User ${data?.name} reported. Chance of fraud: ${json.note}`);
+      // alert(`User ${data?.name} reported. Chance of fraud: ${json.note}`);
+      addWarningOverlay();
     }
   } catch (err) {
     console.error("Error fetching data:", err);
   }
+}
+
+function addWarningOverlay() {
+  var overlay = document.createElement("div");
+  overlay.style.position = "fixed";
+  overlay.style.top = 0;
+  overlay.style.left = 0;
+  overlay.style.width = "100%";
+  overlay.style.height = "100%";
+  overlay.style.backgroundColor = "rgba(255, 0, 0, 0.5)";
+  overlay.style.zIndex = 1000;
+  overlay.style.cursor = "pointer";
+  overlay.style.display = "flex";
+  overlay.style.justifyContent = "center";
+  overlay.style.alignItems = "center";
+
+  // Cria o aviso no centro do overlay
+  var warningText = document.createElement("div");
+  warningText.textContent = "CUIDADO, VOCÊ PODE ESTAR SENDO VÍTIMA DE UM GOLPE";
+  warningText.style.color = "white";
+  warningText.style.fontSize = "24px";
+  warningText.style.fontWeight = "bold";
+  warningText.style.textAlign = "center";
+
+  // Adiciona o aviso ao overlay
+  overlay.appendChild(warningText);
+  // Adiciona um evento de clique para remover o overlay
+  overlay.addEventListener("click", function () {
+    overlay.remove();
+  });
+
+  // Adiciona o overlay na div #main
+  document.querySelector("#main").appendChild(overlay);
 }
