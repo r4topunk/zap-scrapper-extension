@@ -113,7 +113,7 @@ async function reportUser(data) {
     const json = await res.json();
 
     console.log("Server response:", json);
-    if (json.note >= 8) {
+    if (json.nota >= 8) {
       // alert(`User ${data?.name} reported. Chance of fraud: ${json.note}`);
       addWarningOverlay(data.name);
     }
