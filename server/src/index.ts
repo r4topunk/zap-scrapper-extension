@@ -50,11 +50,13 @@ async function analyzeMessages(data: Data) {
               - Se o nome do contato é um número de telefone, isso pode indicar que o contato não foi salvo, o que pode aumentar a suspeita.
               - Se o contato usa um nome que corresponde ao de um conhecido fraudador ou ao de uma organização suspeita, isso deve influenciar a nota.
               - Por outro lado, converse normalmente (discussões triviais, familiares ou de rotina) devem resultar em uma nota de risco baixa, a menos que contenham elementos dos mencionados acima.
-              - Dê maior peso a contextos que envolvem troca de dinheiro ou informações sensíveis.
+              - Dê maior peso a contextos que envolvem troca de dinheiro ou informações sensíveism, e também para propagandas de dinheiro fácil e casas de apostas
 
             Dados para análise:
               - Nome de contato do possível agente malicioso: ${data.name}
               - Mensagens trocadas: ${data.messages}
+
+            Lembrando, você deve retornar somente o número de 0 a 10, e mais nada.
           `,
         },
       ],
