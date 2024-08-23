@@ -56,7 +56,7 @@ async function analyzeMessages(data: Data) {
               - Nome de contato do possível agente malicioso: ${data.name}
               - Mensagens trocadas: ${data.messages}
 
-            Lembrando, você deve retornar somente o número de 0 a 10, e mais nada.
+            Responsta em JSON no formato { nota: 3, analise: "" } :
           `,
         },
       ],
@@ -72,9 +72,19 @@ async function analyzeMessages(data: Data) {
 app.post("/api", async (req: Request, res: Response) => {
   const data: Data = req.body;
   const analyzedData = await analyzeMessages(data);
-  console.log(data);
-  console.log(`Fraud chance: ${analyzedData}`);
-  res.json({ note: analyzedData });
+  // console.log(data);
+  if (analyzedData) {
+    try {
+      console.log(analyzedData);
+      const gpt_res = JSON.parse(analyzedData);
+      console.log(gpt_res);
+      res.json(gpt_res);
+    } catch (err) {
+      throw new Error("OpenAI broken return");
+    }
+    console.log(`Fraud chance: ${analyzedData}`);
+  } else {
+  }
 });
 
 const PORT = 3000;
