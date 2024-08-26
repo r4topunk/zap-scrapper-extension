@@ -1,3 +1,7 @@
+/*
+ * Função autoexecutável que inicializa o monitoramento de mensagens e verifica se o script já foi iniciado anteriormente.
+ * Caso contrário, ativa o monitoramento periódico das mensagens no chat.
+ */
 (function () {
   if (window.autoDetectInitialized) return;
   window.autoDetectInitialized = true;
@@ -5,7 +9,7 @@
   let autoDetectEnabled = localStorage.getItem("autoDetectEnabled") === "true";
   window.autoDetectEnabled = autoDetectEnabled;
 
-  console.log("Injected script running");
+  console.log("ZapScrapper: Injected script running");
   setInterval(async () => {
     let autoDetectEnabled =
       localStorage.getItem("autoDetectEnabled") === "true";
@@ -20,6 +24,10 @@
   }, 5000);
 })();
 
+/*
+ * Obtém o nome do chat atual a partir do elemento HTML.
+ * Retorna null se o nome não puder ser encontrado.
+ */
 function getChatName() {
   const currentMain = document.querySelector("#main header");
   if (!currentMain) return null;
@@ -29,11 +37,15 @@ function getChatName() {
     : name;
 }
 
+/*
+ * Coleta dados das mensagens visíveis no chat e verifica se já foram reportadas.
+ * Se as mensagens forem novas, elas são armazenadas e reportadas.
+ */
 async function scrapData() {
-  console.log("scrapData called");
+  console.log("ZapScrapper: scrapData called");
   let main = document.getElementById("main");
   if (!main) {
-    console.log("Main não encontrado");
+    console.log("ZapScrapper: Main não encontrado");
     return;
   }
 
@@ -73,7 +85,7 @@ async function scrapData() {
     // reportedMessages.add(messagesHash);
     await storeMessage(messagesHash, { name, photo, messages });
     reportUser({ name, photo, messages });
-    console.log("New messages reported", {
+    console.log("ZapScrapper: New messages reported", {
       name,
       photo,
       messages,
@@ -82,11 +94,15 @@ async function scrapData() {
 
     return true;
   } else {
-    console.log("Messages already reported");
+    console.log("ZapScrapper: Messages already reported");
     return false;
   }
 }
 
+/*
+ * Gera um hash de 32 bits a partir de uma string, utilizando um algoritmo simples de deslocamento e adição.
+ * Retorna o hash como uma string.
+ */
 function generateHash(str) {
   let hash = 0;
   for (let i = 0; i < str.length; i++) {
@@ -97,6 +113,10 @@ function generateHash(str) {
   return hash.toString();
 }
 
+/*
+ * Envia os dados do usuário para o servidor, incluindo nome, foto e mensagens.
+ * Caso a nota de alerta seja alta, exibe um overlay de aviso para o usuário.
+ */
 async function reportUser(data) {
   try {
     const res = await fetch("https://ruxintel.r4topunk.xyz/api", {
@@ -112,8 +132,8 @@ async function reportUser(data) {
     });
     const json = await res.json();
 
-    console.log("Server response:", json);
-    if (json.nota >= 8) {
+    console.log("ZapScrapper: Server response:", json);
+    if (json.nota >= 8 || json.note >= 8) {
       // alert(`User ${data?.name} reported. Chance of fraud: ${json.note}`);
       addWarningOverlay(data.name);
     }
@@ -122,6 +142,10 @@ async function reportUser(data) {
   }
 }
 
+/*
+ * Adiciona um overlay de aviso na tela do usuário, alertando sobre um possível golpe.
+ * O overlay oferece a opção de ignorar o aviso, e o status é armazenado no IndexedDB.
+ */
 async function addWarningOverlay(name) {
   if (document.getElementById("overlay-zap-defender")) return;
 
@@ -174,6 +198,9 @@ async function addWarningOverlay(name) {
 // Função para monitorar mudanças no #main
 var lastOpenChat = null;
 
+/*
+ * Monitora as mudanças no chat principal e exibe o overlay de aviso se necessário, de acordo com o status de alerta.
+ */
 function monitorMainChanges() {
   setInterval(async () => {
     let autoDetectEnabled =
@@ -184,9 +211,9 @@ function monitorMainChanges() {
     let name = getChatName();
 
     if (name && lastOpenChat !== name) {
-      console.log("Last:", lastOpenChat);
+      console.log("ZapScrapper: Last:", lastOpenChat);
       lastOpenChat = name;
-      console.log("Checking", name);
+      console.log("ZapScrapper: Checking", name);
       const warningIgnored = await checkWarningStatus(name);
 
       if (warningIgnored == false) {
@@ -199,6 +226,10 @@ function monitorMainChanges() {
 // Inicia o monitoramento
 monitorMainChanges();
 
+/*
+ * Abre ou cria a base de dados IndexedDB para armazenar mensagens e status de alertas.
+ * Resolve com o objeto de banco de dados aberto ou rejeita em caso de erro.
+ */
 function openDatabase() {
   return new Promise((resolve, reject) => {
     const request = indexedDB.open("MessageDatabase", 1);
@@ -224,6 +255,10 @@ function openDatabase() {
   });
 }
 
+/*
+ * Armazena uma nova mensagem no IndexedDB, associada ao hash gerado.
+ * Retorna true se o armazenamento for bem-sucedido, ou false caso contrário.
+ */
 async function storeMessage(hash, data) {
   const db = await openDatabase();
   const transaction = db.transaction(["messages"], "readwrite");
@@ -240,6 +275,10 @@ async function storeMessage(hash, data) {
   });
 }
 
+/*
+ * Verifica se uma mensagem já foi armazenada no IndexedDB, utilizando o hash.
+ * Retorna true se a mensagem já existir, ou false caso contrário.
+ */
 async function checkIfMessageExists(hash) {
   const db = await openDatabase();
   const transaction = db.transaction(["messages"], "readonly");
@@ -256,12 +295,16 @@ async function checkIfMessageExists(hash) {
   });
 }
 
+/*
+ * Verifica o status de alerta para um usuário específico no IndexedDB.
+ * Retorna o status 'ignored' (se o alerta foi ignorado) ou undefined se nenhum alerta for encontrado.
+ */
 async function checkWarningStatus(name) {
   const db = await openDatabase();
   const transaction = db.transaction(["warnings"], "readonly");
   const store = transaction.objectStore("warnings");
 
-  console.log("Checking latest warning for", name);
+  console.log("ZapScrapper: Checking latest warning for", name);
 
   return new Promise((resolve) => {
     const index = store.index("name");
@@ -283,6 +326,10 @@ async function checkWarningStatus(name) {
   });
 }
 
+/*
+ * Armazena o status de alerta (se foi ignorado ou não) para um determinado usuário no IndexedDB.
+ * Retorna true se o armazenamento for bem-sucedido, ou false caso contrário.
+ */
 async function storeWarningStatus(name, ignored) {
   const db = await openDatabase();
   const transaction = db.transaction(["warnings"], "readwrite");
