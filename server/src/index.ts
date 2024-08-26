@@ -56,7 +56,7 @@ async function analyzeMessages(data: Data) {
               - Nome de contato do possível agente malicioso: ${data.name}
               - Mensagens trocadas: ${data.messages}
 
-            Responsta em JSON no formato { nota: 3, analise: "" } :
+            Responda em JSON no formato { nota: 3, analise: "" } :
           `,
         },
       ],
