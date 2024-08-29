@@ -345,3 +345,99 @@ async function storeWarningStatus(name, ignored) {
     };
   });
 }
+
+/**
+ * Função assíncrona de espera
+ */
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+/**
+ * Disabilita o efeito de alteração de escala da área #main
+ * @todo Passar função para dentro de bruteGetContactNumber()
+ */
+const mainTransformStyle = document.createElement("style");
+mainTransformStyle.innerHTML = `
+    #main {
+        transform: scaleX(1) !important;
+    }
+`;
+document.head.appendChild(mainTransformStyle);
+
+/**
+ * De forma bruta, interage na aplicação para buscar o número do contato aberto
+ */
+async function getSiderBarAccountDetail(ms) {
+  try {
+    // Desabilita a exibição do painel na direita
+    const firstClassElement =
+      document.getElementsByClassName("_aigv _aig- _aohg")[0];
+    if (!firstClassElement)
+      throw new Error(
+        "Elemento com classe '_aigv _aig- _aohg' não encontrado."
+      );
+    firstClassElement.style.display = "none";
+
+    await sleep(ms);
+
+    // Clicando no elemento de nome do usuário
+    const secondClassElement = document.getElementsByClassName(
+      "x1c4vz4f x2lah0s xdl72j9 x1i4ejaq x1y332i5"
+    )[0];
+    if (!secondClassElement) {
+      firstClassElement.style.display = "flex";
+      throw new Error(
+        "Elemento com classe 'x1c4vz4f x2lah0s xdl72j9 x1i4ejaq x1y332i5' não encontrado."
+      );
+    }
+    secondClassElement.click();
+
+    await sleep(ms);
+
+    // Pega o valor do número do contato
+    const thirdClassElement = document.getElementsByClassName(
+      "x1jchvi3 x1fcty0u x40yjcy"
+    )[0];
+    if (!thirdClassElement) {
+      firstClassElement.style.display = "flex";
+      throw new Error(
+        "Elemento com classe 'x1jchvi3 x1fcty0u x40yjcy' não encontrado."
+      );
+    }
+    const userDetail = thirdClassElement.innerText;
+    console.log(userDetail);
+
+    const regex = /^\+\d{2} \d{2} \d{4}-\d{4}$/;
+    const isNumber = regex.test(phoneNumber);
+
+    await sleep(ms);
+
+    // Clica no botão de fechar o painel da direita
+    const fourthClassElement = document.getElementsByClassName(
+      "x1okw0bk x16dsc37 x1ypdohk xeq5yr9 xfect85"
+    )[0];
+    if (!fourthClassElement) {
+      firstClassElement.style.display = "flex";
+      throw new Error(
+        "Elemento com classe 'x1okw0bk x16dsc37 x1ypdohk xeq5yr9 xfect85' não encontrado."
+      );
+    }
+    fourthClassElement.click();
+
+    await sleep(ms);
+
+    // Voltando a exibir o painel do direita
+    firstClassElement.style.display = "flex";
+
+    return {
+      userDetail,
+      isNumber,
+    };
+  } catch (error) {
+    c;
+    console.error(error.message);
+    // Parando a execução caso algum elemento não seja encontrado
+    return undefined;
+  }
+}
