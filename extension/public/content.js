@@ -119,7 +119,7 @@ function generateHash(str) {
  */
 async function reportUser(data) {
   try {
-    const res = await fetch("https://ruxintel.r4topunk.xyz/api", {
+    const res = await fetch("https://ruxintel-gpt-api.r4topunk.xyz/api", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
