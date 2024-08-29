@@ -3,7 +3,7 @@ console.log("Ruxintel content loaded");
 const checkInterval = 5000; // 5 segundos
 
 function checkLocalStorage() {
-  const jwt = localStorage.getItem("jwt");
+  const jwt = localStorage.getItem("sessionToken");
 
   if (jwt) {
     chrome.runtime.sendMessage({ jwtToken: jwt }, function (response) {

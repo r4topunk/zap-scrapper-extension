@@ -10,6 +10,9 @@
   window.autoDetectEnabled = autoDetectEnabled;
 
   console.log("ZapScrapper: Injected script running");
+  getUserJwt();
+  fetchMensagensCriticas();
+
   setInterval(async () => {
     let autoDetectEnabled =
       localStorage.getItem("autoDetectEnabled") === "true";
@@ -440,4 +443,32 @@ async function getSiderBarAccountDetail(ms) {
     // Parando a execução caso algum elemento não seja encontrado
     return undefined;
   }
+}
+
+function getUserJwt() {
+  return new Promise((resolve, reject) => {
+    chrome.storage.local.get(["jwtToken"], function (result) {
+      if (chrome.runtime.lastError) {
+        reject(chrome.runtime.lastError);
+      } else {
+        console.log("JWT recuperado:", result.jwtToken);
+        resolve(result.jwtToken);
+      }
+    });
+  });
+}
+
+async function fetchMensagensCriticas() {
+  console.log("Fetching mensagens criticas");
+  const res = await fetch(
+    "https://ruxintel.r4topunk.xyz/service-crud/mensagens-criticas",
+    {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${await getUserJwt()}`,
+      },
+    }
+  );
+
+  console.log(await res.json());
 }
