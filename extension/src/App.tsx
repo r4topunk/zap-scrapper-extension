@@ -3,8 +3,22 @@ import "./App.css";
 
 function App() {
   const [isDetectOn, setIsDetectOn] = useState(
-    localStorage.getItem("autoDetectEnabled") === "true",
+    localStorage.getItem("autoDetectEnabled") === "true"
   );
+
+  const [jwtToken, setJwtToken] = useState<string | undefined>();
+  const isLoggedIn = !!jwtToken;
+
+  useEffect(() => {
+    chrome.storage.local.get(["jwtToken"], (result) => {
+      if (result.jwtToken) {
+        console.log({ result });
+        setJwtToken(result.jwtToken);
+      } else {
+        setJwtToken(undefined);
+      }
+    });
+  }, []);
 
   useEffect(() => {
     localStorage.setItem("autoDetectEnabled", isDetectOn.toString());
@@ -70,42 +84,50 @@ function App() {
         >
           Zap Defender
         </h2>
-        <button
-          style={{
-            backgroundColor: "#171717",
-            color: isDetectOn ? "#FF4D4D" : "#16FF9D",
-            border: isDetectOn ? "1px solid #FF4D4D" : "1px solid #16FF9D",
-            width: "80%",
-            outline: "none",
-            borderRadius: "8px",
-            padding: "0.6em 1.2em",
-            fontSize: "1em",
-            fontWeight: 500,
-            fontFamily: "inherit",
-            cursor: "pointer",
-          }}
-          onClick={toggleAutoDetect}
-        >
-          {isDetectOn ? "Desligar" : "Ligar"}
-        </button>
-        <span
-          style={{
-            textTransform: "uppercase",
-            color: "#727272",
-            fontSize: "12px",
-            margin: 0,
-          }}
-        >
-          Modo de detecção{" "}
-          <span
-            style={{
-              fontWeight: isDetectOn ? "700" : "400",
-              color: isDetectOn ? "#16FF9D" : "#FF4D4D",
-            }}
-          >
-            {isDetectOn ? "ativado" : "desativado"}
-          </span>
-        </span>
+        {isLoggedIn ? (
+          <>
+            <button
+              style={{
+                backgroundColor: "#171717",
+                color: isDetectOn ? "#FF4D4D" : "#16FF9D",
+                border: isDetectOn ? "1px solid #FF4D4D" : "1px solid #16FF9D",
+                width: "80%",
+                outline: "none",
+                borderRadius: "8px",
+                padding: "0.6em 1.2em",
+                fontSize: "1em",
+                fontWeight: 500,
+                fontFamily: "inherit",
+                cursor: "pointer",
+              }}
+              onClick={toggleAutoDetect}
+            >
+              {isDetectOn ? "Desligar" : "Ligar"}
+            </button>
+            <span
+              style={{
+                textTransform: "uppercase",
+                color: "#727272",
+                fontSize: "12px",
+                margin: 0,
+              }}
+            >
+              Modo de detecção{" "}
+              <span
+                style={{
+                  fontWeight: isDetectOn ? "700" : "400",
+                  color: isDetectOn ? "#16FF9D" : "#FF4D4D",
+                }}
+              >
+                {isDetectOn ? "ativado" : "desativado"}
+              </span>
+            </span>
+          </>
+        ) : (
+          <>
+            <p>User not logged in</p>
+          </>
+        )}
       </div>
     </div>
   );
