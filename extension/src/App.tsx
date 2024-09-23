@@ -125,7 +125,19 @@ function App() {
           </>
         ) : (
           <>
-            <p>User not logged in</p>
+            <a
+              style={{
+                color: "white",
+                fontSize: "16px",
+                marginBottom: "16px",
+                cursor: "pointer"
+              }}
+              onClick={() => {
+                window.open("https://ruxintel.r4topunk.xyz/", "_blank");
+              }}
+            >
+              Realizar login
+            </a>
           </>
         )}
       </div>

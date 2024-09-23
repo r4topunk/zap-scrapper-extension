@@ -26,14 +26,14 @@ chrome.runtime.onInstalled.addListener(() => {
   });
 });
 
-// Escuta mensagens do content script
-chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-  if (request.jwtToken) {
-    // Armazena o JWT em chrome.storage.local
-    chrome.storage.local.set({ jwtToken: request.jwtToken }, function () {
-      console.log("JWT salvo em chrome.storage.local.");
-      sendResponse({ status: "JWT armazenado com sucesso" });
-    });
+chrome.cookies.onChanged.addListener(
+  (changeInfo) => {
+    const cookie =  changeInfo.cookie;
+    if (cookie.domain == "ruxintel.r4topunk.xyz" && cookie.name == "sessionToken") {
+      chrome.storage.local.set({ jwtToken: cookie.value }, function () {
+        console.log("JWT salvo em chrome.storage.local.", cookie);
+        sendResponse({ status: "JWT armazenado com sucesso" });
+      });
+    }
   }
-  return true; // Indica que a resposta será enviada de forma assíncrona
-});
+)
