@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "version": "1.3.3",
+  "version": "1.3.4",
   "name": "Zap Defender",
   "action": {
     "default_popup": "index.html"

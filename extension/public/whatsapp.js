@@ -18,11 +18,13 @@
     window.autoDetectEnabled = autoDetectEnabled;
     if (!autoDetectEnabled) return;
 
-    fetchMensagensCriticas();
-    const name = getChatName();
+    const name = await getChatNumber();
     const warningIgnored = await checkWarningStatus(name);
     if (warningIgnored == true || warningIgnored === undefined) {
-      scrapData();
+      const hasBlocks = await validatePhoneBlocklist();
+      if (!hasBlocks) {
+        scrapData();
+      }
     }
   }, 5000);
 })();
@@ -448,21 +450,30 @@ function getUserJwt() {
   });
 }
 
-async function fetchMensagensCriticas() {
-  const chatNumber = await getChatNumber();
-  console.log("getChatNumber", chatNumber);
-  // console.log("Fetching mensagens criticas");
-  // const res = await fetch(
-  //   "https://ruxintel.r4topunk.xyz/service-crud/mensagens-criticas",
-  //   {
-  //     method: "GET",
-  //     headers: {
-  //       Authorization: `Bearer ${await getUserJwt()}`,
-  //     },
-  //   }
-  // );
+async function validatePhoneBlocklist(chatNumber) {
+  if (!chatNumber) {
+    chatNumber = await getChatNumber();
+  }
+  const number = formatPhoneNumber(chatNumber);
+  
+  const res = await fetch(
+    `https://ruxintel.r4topunk.xyz/service-crud/blocklist/${number}/phone`,
+    {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${await getUserJwt()}`,
+      },
+    }
+  );
 
-  // console.log(await res.json());
+  const { data } = await res.json(); 
+
+  if (data.dados?.length > 0) {
+    addWarningOverlay(chatNumber);
+    return true;
+  }
+
+  return false;
 }
 
 async function getChatNumber() {
@@ -482,4 +493,17 @@ async function getChatNumber() {
 function isValuePhone(value) {
   const regex = /^\+\d{2} \d{2} \d{4,5}-\d{4}$/;
   return regex.test(value);
+}
+
+function formatPhoneNumber(phoneNumber) {
+  // Remove os caracteres não numéricos como espaço, hífen e o "+"
+  let cleanedNumber = phoneNumber.replace(/[^\d]/g, '');
+
+  // Verifica se o número tem 11 dígitos após o código do país (sem o nono dígito)
+  if (cleanedNumber.length === 11) {
+    // Adiciona o 9 no início do número após o código do país e do estado
+    cleanedNumber = cleanedNumber.slice(0, 4) + '9' + cleanedNumber.slice(4);
+  }
+
+  return cleanedNumber;
 }
