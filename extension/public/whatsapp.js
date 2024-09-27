@@ -11,7 +11,6 @@
 
   console.log("ZapScrapper: Injected script running");
   getUserJwt();
-  fetchMensagensCriticas();
 
   setInterval(async () => {
     let autoDetectEnabled =
@@ -19,6 +18,7 @@
     window.autoDetectEnabled = autoDetectEnabled;
     if (!autoDetectEnabled) return;
 
+    fetchMensagensCriticas();
     const name = getChatName();
     const warningIgnored = await checkWarningStatus(name);
     if (warningIgnored == true || warningIgnored === undefined) {
@@ -408,11 +408,6 @@ async function getSiderBarAccountDetail(ms) {
         "Elemento com classe 'x1jchvi3 x1fcty0u x40yjcy' não encontrado."
       );
     }
-    const userDetail = thirdClassElement.innerText;
-    console.log(userDetail);
-
-    const regex = /^\+\d{2} \d{2} \d{4}-\d{4}$/;
-    const isNumber = regex.test(phoneNumber);
 
     await sleep(ms);
 
@@ -432,13 +427,8 @@ async function getSiderBarAccountDetail(ms) {
 
     // Voltando a exibir o painel do direita
     firstClassElement.style.display = "flex";
-
-    return {
-      userDetail,
-      isNumber,
-    };
+    return thirdClassElement.innerText;
   } catch (error) {
-    c;
     console.error(error.message);
     // Parando a execução caso algum elemento não seja encontrado
     return undefined;
@@ -459,16 +449,37 @@ function getUserJwt() {
 }
 
 async function fetchMensagensCriticas() {
-  console.log("Fetching mensagens criticas");
-  const res = await fetch(
-    "https://ruxintel.r4topunk.xyz/service-crud/mensagens-criticas",
-    {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${await getUserJwt()}`,
-      },
-    }
-  );
+  const chatNumber = await getChatNumber();
+  console.log("getChatNumber", chatNumber);
+  // console.log("Fetching mensagens criticas");
+  // const res = await fetch(
+  //   "https://ruxintel.r4topunk.xyz/service-crud/mensagens-criticas",
+  //   {
+  //     method: "GET",
+  //     headers: {
+  //       Authorization: `Bearer ${await getUserJwt()}`,
+  //     },
+  //   }
+  // );
 
-  console.log(await res.json());
+  // console.log(await res.json());
+}
+
+async function getChatNumber() {
+  const chatTitle = getChatName();
+  if (isValuePhone(chatTitle)) {
+    return chatTitle;
+  }
+  
+  const userDetail = await getSiderBarAccountDetail(400);
+  if (isValuePhone(userDetail)) {
+    return userDetail;
+  }
+  
+  return null;
+}
+
+function isValuePhone(value) {
+  const regex = /^\+\d{2} \d{2} \d{4,5}-\d{4}$/;
+  return regex.test(value);
 }
