@@ -11,7 +11,7 @@
 
   console.log("ZapScrapper: Injected script running");
   setInterval(async () => {
-    const jwt = getUserJwt();
+    const jwt = await getUserJwt();
     if (!jwt) return;
 
     let autoDetectEnabled =
@@ -445,7 +445,7 @@ function getUserJwt() {
         reject(chrome.runtime.lastError);
       } else {
         console.log("JWT recuperado:", result.jwtToken);
-        resolve(result.jwtToken);
+        resolve(result.jwtToken && result.jwtToken !== "" ? result.jwtToken : undefined);
       }
     });
   });
