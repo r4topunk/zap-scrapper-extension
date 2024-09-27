@@ -10,9 +10,10 @@
   window.autoDetectEnabled = autoDetectEnabled;
 
   console.log("ZapScrapper: Injected script running");
-  getUserJwt();
-
   setInterval(async () => {
+    const jwt = getUserJwt();
+    if (!jwt) return;
+
     let autoDetectEnabled =
       localStorage.getItem("autoDetectEnabled") === "true";
     window.autoDetectEnabled = autoDetectEnabled;
