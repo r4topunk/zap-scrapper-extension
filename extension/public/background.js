@@ -12,20 +12,6 @@ chrome.runtime.onInstalled.addListener(() => {
   });
 });
 
-chrome.runtime.onInstalled.addListener(() => {
-  chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-    if (
-      changeInfo.status === "complete" &&
-      /^https:\/\/ruxintel.r4topunk.xyz/.test(tab.url)
-    ) {
-      chrome.scripting.executeScript({
-        target: { tabId: tabId },
-        files: ["ruxintel.js"],
-      });
-    }
-  });
-});
-
 chrome.cookies.onChanged.addListener(
   (changeInfo) => {
     const cookie =  changeInfo.cookie;
