@@ -486,6 +486,10 @@ async function validatePhoneBlocklist(chatNumber) {
   return false;
 }
 
+/**
+ * Busca na página o número do usuário
+ * @returns {Promise<number>} number
+ */
 async function getChatNumber() {
   const chatTitle = getChatName();
   if (isValuePhone(chatTitle)) {
