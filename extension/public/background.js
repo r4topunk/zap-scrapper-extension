@@ -1,3 +1,6 @@
+/**
+ * Injeta o script whatsapp.js no site do WhatsApp
+ */
 chrome.runtime.onInstalled.addListener(() => {
   chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     if (
@@ -12,6 +15,9 @@ chrome.runtime.onInstalled.addListener(() => {
   });
 });
 
+/**
+ * Busca o token de sessão no site da Ruxintel
+ */
 chrome.cookies.onChanged.addListener(
   (changeInfo) => {
     const cookie =  changeInfo.cookie;
