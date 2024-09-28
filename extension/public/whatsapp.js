@@ -23,9 +23,9 @@
     const warningIgnored = await checkWarningStatus(name);
     if (warningIgnored == true || warningIgnored === undefined) {
       const hasBlocks = await validatePhoneBlocklist();
-      if (!hasBlocks) {
+      // if (!hasBlocks) {
         scrapData();
-      }
+      // }
     }
   }, 5000);
 })();
@@ -310,11 +310,11 @@ async function checkWarningStatus(name) {
   const transaction = db.transaction(["warnings"], "readonly");
   const store = transaction.objectStore("warnings");
 
-  console.log("ZapScrapper: Buscando último registro para o número", name);
-
   return new Promise((resolve) => {
     const index = store.index("name");
     const cursorRequest = index.openCursor(name, "prev"); // "prev" para iterar na ordem inversa
+
+    console.log("ZapScrapper: Buscando último registro para o número", name);
 
     cursorRequest.onsuccess = (event) => {
       const cursor = event.target.result;
@@ -460,6 +460,7 @@ function getUserJwt() {
  * @returns 
  */
 async function validatePhoneBlocklist(chatNumber) {
+  console.log("ZapScrapper: Validando número na blocklist")
   if (!chatNumber) {
     chatNumber = await getChatNumber();
   }
@@ -478,7 +479,8 @@ async function validatePhoneBlocklist(chatNumber) {
   const { data } = await res.json(); 
 
   if (data.dados?.length > 0) {
-    addWarningOverlay(chatNumber);
+    console.log("ZapScrapper: Número encontrado na blocklist")
+    // addWarningOverlay(chatNumber);
     return true;
   }
 
