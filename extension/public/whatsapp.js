@@ -438,6 +438,10 @@ async function getSiderBarAccountDetail(ms) {
   }
 }
 
+/**
+ * Busca o JWT do usuário logado
+ * @returns O valor do JWT
+ */
 function getUserJwt() {
   return new Promise((resolve, reject) => {
     chrome.storage.local.get(["jwtToken"], function (result) {
@@ -451,6 +455,11 @@ function getUserJwt() {
   });
 }
 
+/**
+ * Valida se o contato está registrado no Blocklist
+ * @param {string} chatNumber 
+ * @returns 
+ */
 async function validatePhoneBlocklist(chatNumber) {
   if (!chatNumber) {
     chatNumber = await getChatNumber();
@@ -491,11 +500,21 @@ async function getChatNumber() {
   return null;
 }
 
+/**
+ * Valida se o número é válido
+* @param {string} value 
+ * @returns 
+ */
 function isValuePhone(value) {
   const regex = /^\+\d{2} \d{2} \d{4,5}-\d{4}$/;
   return regex.test(value);
 }
 
+/**
+ * Formata o número de telefone para um padrão
+ * @param {string} phoneNumber 
+ * @returns 
+ */
 function formatPhoneNumber(phoneNumber) {
   // Remove os caracteres não numéricos como espaço, hífen e o "+"
   let cleanedNumber = phoneNumber.replace(/[^\d]/g, '');
