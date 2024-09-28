@@ -91,7 +91,7 @@ async function scrapData() {
     // reportedMessages.add(messagesHash);
     await storeMessage(messagesHash, { name, photo, messages });
     reportUser({ name, photo, messages });
-    console.log("ZapScrapper: New messages reported", {
+    console.log("ZapScrapper: Novas mensagens reportadas", {
       name,
       photo,
       messages,
@@ -100,7 +100,7 @@ async function scrapData() {
 
     return true;
   } else {
-    console.log("ZapScrapper: Messages already reported");
+    console.log("ZapScrapper: Mensagens já reportadas");
     return false;
   }
 }
@@ -217,9 +217,9 @@ function monitorMainChanges() {
     let name = getChatName();
 
     if (name && lastOpenChat !== name) {
-      console.log("ZapScrapper: Last:", lastOpenChat);
+      console.log("ZapScrapper: Última análise:", lastOpenChat);
       lastOpenChat = name;
-      console.log("ZapScrapper: Checking", name);
+      console.log("ZapScrapper: Checando", name);
       const warningIgnored = await checkWarningStatus(name);
 
       if (warningIgnored == false) {
@@ -310,7 +310,7 @@ async function checkWarningStatus(name) {
   const transaction = db.transaction(["warnings"], "readonly");
   const store = transaction.objectStore("warnings");
 
-  console.log("ZapScrapper: Checking latest warning for", name);
+  console.log("ZapScrapper: Buscando último registro para o número", name);
 
   return new Promise((resolve) => {
     const index = store.index("name");
@@ -448,7 +448,6 @@ function getUserJwt() {
       if (chrome.runtime.lastError) {
         reject(chrome.runtime.lastError);
       } else {
-        console.log("JWT recuperado:", result.jwtToken);
         resolve(result.jwtToken && result.jwtToken !== "" ? result.jwtToken : undefined);
       }
     });
